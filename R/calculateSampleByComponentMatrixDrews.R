@@ -57,6 +57,11 @@ calculateSampleByComponentMatrixDrews = function(brECNF, UNINFPRIOR = TRUE) {
     } )
 
     # Return data
+    IDcount <- as.data.frame(table(do.call(c, lapply(lMats, rownames))))  # occurrence times of each sample in list object (lMats).
+    IDkept <-  as.character(droplevels(subset(IDcount, Freq==length(allFeatures))$Var1)) # sample list to be kept
+    lMats_new <- lapply(1:length(allFeatures), function(thisorder) { lMats[[thisorder]][IDkept,] }) # filter lMats
+    lMats <- lMats_new
+    
     allMats = do.call(cbind, lMats)
     lMats = list(sampleByComponent = allMats, model=allModels)
     return(lMats)
